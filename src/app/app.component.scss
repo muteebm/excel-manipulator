@@ -1,0 +1,19 @@
+.main {
+    display: flex;
+    .leftBar {
+        flex: 20%;
+        height: 100%;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: space-evenly;
+    }
+    .center {
+        flex: 60%;
+    }
+    .rightBar {
+        flex: 20%;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: space-evenly;
+    }
+}
