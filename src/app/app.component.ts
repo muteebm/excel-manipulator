@@ -35,9 +35,8 @@ export class AppComponent implements OnInit {
   }
 
   uploadListener($event: any): void {
-    console.log($event)
-    console.log("CALLED")
 		const files = $event.target.files[0];
+    console.log(files)
 			const reader = new FileReader();
 			// reader.readAsBinaryString(file);
       
@@ -45,22 +44,25 @@ export class AppComponent implements OnInit {
 				const csv: any = reader.result;
         var workbook = XLSX.read(csv, {type: 'binary'});
         const sheet = workbook.Sheets[workbook.SheetNames[0]]
-        console.log(workbook.Sheets[workbook.SheetNames[0]])
         
         this.sheetOptions = workbook.SheetNames;
-        this.sheet = XLSX.utils.sheet_to_json(sheet)
+        this.sheet = XLSX.utils.sheet_to_json(sheet, {header: 1})
         this.dataSets.push({
+          dataSetName: files.name,
           jsonSheet: this.sheet,
           sheetExportLocation: '',
+          selectedSheet: '',
           colStart: '',
           rowStart: 0,
+          startImportRow: 0,
+          endImportRow: 0,
+          importCols: [],
           cols: []
         });
-        console.log(this.dataSets)
         this.selectedIndex = this.dataSets.length -1;
         this.addWorksheettoWorkbook()
         this.sheetKeys = Object.keys(this.sheet[0])
-        var sheet_name_list = workbook.SheetNames;
+        // var sheet_name_list = workbook.SheetNames;
         // let columnHeaders = [];
         // for (var sheetIndex = 0; sheetIndex < sheet_name_list.length; sheetIndex++) {
         //     var worksheet = workbook.Sheets[sheet_name_list[sheetIndex]];
@@ -84,7 +86,7 @@ export class AppComponent implements OnInit {
 	}
 
   addWorksheettoWorkbook(): any {
-    const tempSheet = XLSX.utils.json_to_sheet(this.dataSets[this.selectedIndex].jsonSheet);
+    const tempSheet = XLSX.utils.json_to_sheet(this.dataSets[this.selectedIndex].jsonSheet, {skipHeader: true});
     XLSX.utils.book_append_sheet(this.workbook, tempSheet, this.dataSets[this.selectedIndex].sheetExportLocation);
     console.log(this.workbook);
   }

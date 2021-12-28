@@ -33,13 +33,10 @@
       <h3>Data view</h3>
       <table class="table table-striped">
         <thead>
-        <tr>
-          <th scope="col" *ngFor="let key of sheetKeys">{{key}}</th>
-        </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let sheetVal of sheet">
-          <th scope="row">{{sheetVal}}</th>
+        <tr *ngFor="let data of dataSets[selectedIndex].jsonSheet">
+          <th scope="row">{{data}}</th>
         </tr>
         </tbody>
       </table>
@@ -49,15 +46,15 @@
       <div class="indexRows">
           <h3>Index Rows</h3>
           <div class="rangeInput">
-            <input type="number"/>
+            <input [(ngModel)]="dataSets[selectedIndex].startImportRow" type="number"/>
             <p><b> -- </b></p>
-            <input type="number"/>
+            <input [(ngModel)]="dataSets[selectedIndex].endImportRow" type="number"/>
           </div>
       </div>
       <div class="selectSheet">
         <h3>Select Sheet</h3>
-        <select>
-          <option *ngFor="let opt of sheetOptions">{{opt}}</option>
+        <select [(ngModel)]="dataSets[selectedIndex].selectedSheet">
+          <option *ngFor="let opt of sheetOptions" [value]="opt">{{opt}}</option>
         </select>
       </div>
   
@@ -76,7 +73,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <form>
+    <!-- <form> -->
       <div class="form-group">
         <div>
           <label for="dateOfBirth">File Export Name </label>
@@ -108,7 +105,7 @@
         </ul>
         <span>+</span>
       </div>
-    </form>
+    <!-- </form> -->
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Add</button>
@@ -125,7 +122,7 @@
   <div class="modal-body">
     <form>
       <label>File export location</label>
-      <p>alsa.as.</p>
+      <p>{{exportWorkbookName}}</p>
       <h5>Data Sets</h5>
       <table class="table table-striped">
         <thead>
@@ -137,11 +134,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <th scope="row"></th>
-          <td></td>
-          <td></td>
-          <td></td>
+        <tr *ngFor="let data of dataSets">
+          <th scope="row">{{data.dataSetName}}</th>
+          <td>{{data.selectedSheet}}</td>
+          <td>{{data.importCols}}</td>
+          <td>{{data.startImportRow}} - {{data.endImportRow}}</td>
         </tr>
         </tbody>
       </table>
@@ -156,11 +153,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <th scope="row"></th>
-          <td></td>
-          <td></td>
-          <td></td>
+        <tr *ngFor="let data of dataSets">
+          <th scope="row">{{data.dataSetName}}</th>
+          <td>{{data.sheetExportLocation}}</td>
+          <td>{{data.colStart}}</td>
+          <td>{{data.rowStart}}</td>
         </tr>
         </tbody>
       </table>
