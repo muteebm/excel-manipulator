@@ -3,7 +3,7 @@
     <button (click)="open(overviewContent)" class="btn-primary">
       Overview Details
     </button>
-    <button class="btn-primary">
+    <button (click)="exportWorkbook()" class="btn-primary">
       Export Workbook
     </button>
     
@@ -16,9 +16,7 @@
           Imported datasets
         </h3>
         <ul>
-          <li class="selected">Data1</li>
-          <li>Data1</li>
-          <li>Data1</li>
+          <li *ngFor="let data of dataSets; let i = index" [class.selected]="selectedIndex === i" (click)="selectedIndex = i;">Dataset {{i}}</li>
         </ul>
         <input type="file" accept=".xlsx" (change)="uploadListener($event)"/>
       </div>
@@ -40,10 +38,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <th scope="row"></th>
-          <td></td>
-          <td></td>
+        <tr *ngFor="let sheetVal of sheet">
+          <th scope="row">{{sheetVal}}</th>
         </tr>
         </tbody>
       </table>
@@ -65,7 +61,7 @@
         </select>
       </div>
   
-      <button (click)="open(content)" class="primary">Add to exports</button>
+      <button (click)="open(content)" class="primary">Edit export options</button>
       
     </div>
   </div>
@@ -84,20 +80,33 @@
       <div class="form-group">
         <div>
           <label for="dateOfBirth">File Export Name </label>
-          <input id="dateOfBirth" class="form-control" type="text">
+          <input [disabled]="true" [value]="exportWorkbookName" id="dateOfBirth" class="form-control" type="text">
         </div>
         <div>
           <label for="dateOfBirth">Sheet Export Location </label>
-          <input id="dateOfBirth" class="form-control" type="text">
+          <input id="dateOfBirth" [(ngModel)]="dataSets[selectedIndex].sheetExportLocation" class="form-control" type="text">
         </div>
         <div>
           <label for="dateOfBirth">Column Start </label>
-          <input id="dateOfBirth" class="form-control" type="text">
+          <input id="dateOfBirth" [(ngModel)]="dataSets[selectedIndex].colStart"  class="form-control" type="text">
         </div>
         <div>
           <label for="dateOfBirth">Row Start </label>
-          <input id="dateOfBirth" class="form-control" type="number">
+          <input id="dateOfBirth" [(ngModel)]="dataSets[selectedIndex].rowStart"  class="form-control" type="number">
         </div>
+      </div>
+      <br>
+      <div>
+        <div class="colsList">
+          <label>Add/Edit Columns</label>
+          
+        </div>
+        
+        <ul class="horizontol">
+          <li>Col1</li>
+          <li>Col2</li>
+        </ul>
+        <span>+</span>
       </div>
     </form>
   </div>

@@ -51,6 +51,10 @@
                     background: gray;
                     color: white;
                 }
+                .selected {
+                    background: lightblue;
+                    color: black;
+                }
             }
             input {
                 margin-left: 20px;
@@ -100,6 +104,18 @@
             color: white;
         }
     }
+}
+
+.colsList {
+    display: flex;
+    align-items: center;
+}
+
+.horizontol {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
 
