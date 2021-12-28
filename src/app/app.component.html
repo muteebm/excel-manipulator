@@ -1,34 +1,163 @@
-<div class="main">
-  <div class="leftBar">
-    <div>
-      <h3>
-        Imported datasets
-      </h3>
-      <ul>
-        <li>Data1</li>
-        <li>Data1</li>
-        <li>Data1</li>
-      </ul>
-      <input type="file" accept=".xlsx"/>
-    </div>
+<div class="doc">
+  <div class="header">
+    <button (click)="open(overviewContent)" class="btn-primary">
+      Overview Details
+    </button>
+    <button class="btn-primary">
+      Export Workbook
+    </button>
     
-    <div>
-      <h3>
-        Load Main File
-      </h3>
-      <input type="file" accept=".xlsx"/>
-    </div>
-    
+
   </div>
-  <div class="center">
-    <h3>Data view</h3>
-  </div>
-  <div class="rightBar">
-    <h3>Index Columns</h3>
-    <div>
-      <h3>Index Rows</h3>
-      <input type="range"/>
+  <div class="main">
+    <div class="leftBar">
+      <div class="importDatasets">
+        <h3>
+          Imported datasets
+        </h3>
+        <ul>
+          <li class="selected">Data1</li>
+          <li>Data1</li>
+          <li>Data1</li>
+        </ul>
+        <input type="file" accept=".xlsx" (change)="uploadListener($event)"/>
+      </div>
+      
+      <div>
+        <h3>
+          Load Main File
+        </h3>
+        <input type="file" accept=".xlsx"/>
+      </div>
+      
     </div>
-    <h3>Select Sheet</h3>
+    <div class="center">
+      <h3>Data view</h3>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col" *ngFor="let key of sheetKeys">{{key}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row"></th>
+          <td></td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="rightBar">
+      <h3>Index Columns</h3>
+      <div class="indexRows">
+          <h3>Index Rows</h3>
+          <div class="rangeInput">
+            <input type="number"/>
+            <p><b> -- </b></p>
+            <input type="number"/>
+          </div>
+      </div>
+      <div class="selectSheet">
+        <h3>Select Sheet</h3>
+        <select>
+          <option *ngFor="let opt of sheetOptions">{{opt}}</option>
+        </select>
+      </div>
+  
+      <button (click)="open(content)" class="primary">Add to exports</button>
+      
+    </div>
   </div>
 </div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Export Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <div>
+          <label for="dateOfBirth">File Export Name </label>
+          <input id="dateOfBirth" class="form-control" type="text">
+        </div>
+        <div>
+          <label for="dateOfBirth">Sheet Export Location </label>
+          <input id="dateOfBirth" class="form-control" type="text">
+        </div>
+        <div>
+          <label for="dateOfBirth">Column Start </label>
+          <input id="dateOfBirth" class="form-control" type="text">
+        </div>
+        <div>
+          <label for="dateOfBirth">Row Start </label>
+          <input id="dateOfBirth" class="form-control" type="number">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Add</button>
+  </div>
+</ng-template>
+
+<ng-template #overviewContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Overview</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <label>File export location</label>
+      <p>alsa.as.</p>
+      <h5>Data Sets</h5>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Imported Dataset</th>
+          <th scope="col">Selected Sheet</th>
+          <th scope="col">Columns Selected</th>
+          <th scope="col">Rows Selected</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row"></th>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+      <h5>Sheet Export Locations</h5>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Imported Dataset</th>
+          <th scope="col">Selected Location</th>
+          <th scope="col">Columns Start</th>
+          <th scope="col">Rows Start</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row"></th>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Export Dataset</button>
+  </div>
+</ng-template>
