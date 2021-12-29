@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   selectedIndex: number;
   workbook: any;
   columns = [];
+  colHeaders = {};
   dataSets = [];
   jsonArray;
   @ViewChild('content') contentModal;
@@ -45,7 +46,10 @@ export class AppComponent implements OnInit {
 
   tagInput(tags: any) {
     this.dataSets[this.selectedIndex].importCols = tags;
-
+    tags.forEach((tag: any) => {
+      this.dataSets[this.selectedIndex].colHeaders[tag] = 'Default';
+    })
+    console.log(this.dataSets[this.selectedIndex].colHeaders);
   }
 
   onFail(msg){
@@ -80,10 +84,12 @@ export class AppComponent implements OnInit {
           selectedSheet: '',
           colStart: 'A',
           rowStart: 0,
-          startImportRow: 1,
+          startImportRow: 0,
           endImportRow: 0,
           sheetOptions: workbook.SheetNames, 
           importCols: [],
+          isExportWithHeaders: false,
+          colHeaders: {},
           cols: {}
         });
         this.selectedIndex = this.dataSets.length? this.dataSets.length - 1 : 0;
@@ -98,6 +104,10 @@ export class AppComponent implements OnInit {
 				console.log('error is occured while reading file!');
 			};
 	}
+
+  getColHeaderKeys(): any {
+    return Object.keys(this.dataSets[this.selectedIndex].colHeaders);
+  }
 
   mainFileListener($event: any): void {
     const files = $event.target.files[0];
@@ -148,7 +158,7 @@ export class AppComponent implements OnInit {
     that.jsonArray = new Array(worksheet.rowCount);
     let index=0;
     this.dataSets[datasetIndex].importCols.forEach((col: any) => {
-      const colVal = worksheet.getColumn(col);
+      const colVal = worksheet.getColumn(col.toUpperCase());
       colVal.eachCell({ includeEmpty: true }, function(cell, rowNumber) {
         // ...
         if(that.jsonArray[rowNumber-1]?.length) {
@@ -165,16 +175,28 @@ export class AppComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  addWorksheettoWorkbook(sheet: any): any {
+  parseJsonForHeaders(sheet: any, index: any) {
+    let headerArray = [];
+    for(const col in this.dataSets[index].colHeaders) {
+      headerArray.push(this.dataSets[index].colHeaders[col]);
+    }
+    sheet.unshift(headerArray);
+    return sheet;
+  }
+
+  addWorksheettoWorkbook(sheet: any, index): any {
+    if(this.dataSets[index].isExportWithHeaders) {
+      sheet = this.parseJsonForHeaders(sheet, index);
+    }
     const tempSheet = XLSX.utils.json_to_sheet(sheet, {skipHeader: true});
-    XLSX.utils.book_append_sheet(this.workbook, tempSheet, this.dataSets[this.selectedIndex].sheetExportLocation);
+    XLSX.utils.book_append_sheet(this.workbook, tempSheet, this.dataSets[index].sheetExportLocation);
     this.modalService.dismissAll();
   }
 
   exportWorkbook(): any {
     console.log(this.dataSets)
     this.dataSets.forEach((val: any, index: any ) => {
-      this.addWorksheettoWorkbook(val.jsonSheet)
+      this.addWorksheettoWorkbook(val.jsonSheet, index)
     })
      XLSX.writeFile(this.workbook, `${this.exportWorkbookName}.xlsx`)
   }

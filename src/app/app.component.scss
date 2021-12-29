@@ -1,6 +1,7 @@
 .doc {
     display: flex;
     flex-direction: column;
+    background: lightgray;
 }
 .header {
     flex: 10%;
@@ -60,6 +61,12 @@
                 margin-left: 20px;
             }
             
+        }
+        .importMainFile {
+            justify-content: center;
+            h3 {
+                text-align: center;
+            }
         }
     }
     .center {

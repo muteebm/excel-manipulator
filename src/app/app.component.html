@@ -1,9 +1,9 @@
 <div class="doc">
   <div class="header">
-    <button (click)="open(overviewContent)" class="btn-primary">
+    <button [disabled]="!dataSets.length" (click)="open(overviewContent)" class="btn-primary">
       Overview Details
     </button>
-    <button (click)="exportWorkbook()" class="btn-primary">
+    <button [disabled]="!dataSets.length" (click)="exportWorkbook()" class="btn-primary">
       Export Workbook
     </button>
     
@@ -21,7 +21,7 @@
         <input type="file" accept=".xlsx" (change)="uploadListener($event)"/>
       </div>
       
-      <div>
+      <div class="importMainFile">
         <h3>
           Load Main File
         </h3>
@@ -73,7 +73,7 @@
         </select>
       </div>
   
-      <button (click)="open(content)" class="primary">Edit export options</button>
+      <button [disabled]="dataSets[selectedIndex]?.selectedSheet === '' || !dataSets[selectedIndex]?.importCols.length" (click)="open(content)" class="primary">Add to exports</button>
       
     </div>
   </div>
@@ -97,6 +97,16 @@
         <div>
           <label for="dateOfBirth">Sheet Export Location </label>
           <input id="dateOfBirth" [(ngModel)]="dataSets[selectedIndex].sheetExportLocation" class="form-control" type="text">
+        </div>
+        <div>
+          <label>Export with Headers</label>
+          <input type="checkbox" [(ngModel)]="dataSets[selectedIndex].isExportWithHeaders">
+        </div>
+        <div *ngIf="dataSets[selectedIndex].isExportWithHeaders">
+          <div *ngFor="let col of getColHeaderKeys()">
+            <label>Column <b>{{col}}</b>'s Header Value</label> 
+            <input type="text" [(ngModel)]="dataSets[selectedIndex].colHeaders[col]">
+          </div>
         </div>
         <!-- <div>
           <label for="dateOfBirth">Column Start </label>
