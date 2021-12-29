@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { Workbook } from 'exceljs';
+
 
 @Component({
   selector: 'app-root',
@@ -47,6 +49,7 @@ export class AppComponent implements OnInit {
         
         this.sheetOptions = workbook.SheetNames;
         this.sheet = XLSX.utils.sheet_to_json(sheet, {header: 1})
+        console.log(this.sheet)
         this.dataSets.push({
           dataSetName: files.name,
           jsonSheet: this.sheet,
@@ -54,12 +57,14 @@ export class AppComponent implements OnInit {
           selectedSheet: '',
           colStart: '',
           rowStart: 0,
-          startImportRow: 0,
+          startImportRow: 1,
           endImportRow: 0,
           importCols: [],
           cols: []
         });
         this.selectedIndex = this.dataSets.length -1;
+    this.readExcel($event)
+
         this.addWorksheettoWorkbook()
         this.sheetKeys = Object.keys(this.sheet[0])
         // var sheet_name_list = workbook.SheetNames;
@@ -84,6 +89,35 @@ export class AppComponent implements OnInit {
 				console.log('error is occured while reading file!');
 			};
 	}
+
+  readExcel(event) {
+    const workbook = new Workbook();
+    const target: DataTransfer = <DataTransfer>(event.target);
+    if (target.files.length !== 1) {
+      throw new Error('Cannot use multiple files');
+    }
+
+    const arryBuffer = new Response(target.files[0]).arrayBuffer();
+    arryBuffer.then(function (data) {
+      workbook.xlsx.load(data)
+        .then(function () {
+
+          // play with workbook and worksheet now
+          console.log(workbook);
+          console.log( workbook.worksheets);
+          const worksheet = workbook.getWorksheet(1);
+          console.log(worksheet)
+          // this.dataSets[this.selectedIndex].endImportRow = worksheet.rowCount;
+          console.log('rowCount: ', worksheet.rowCount);
+          console.table(worksheet.columns)
+          const col = worksheet.getColumn('A');
+          col.eachCell({ includeEmpty: true }, function(cell, rowNumber) {
+            // ...
+            console.log(cell.value, rowNumber);
+          });
+        });
+    });
+  }
 
   addWorksheettoWorkbook(): any {
     const tempSheet = XLSX.utils.json_to_sheet(this.dataSets[this.selectedIndex].jsonSheet, {skipHeader: true});
