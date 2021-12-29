@@ -4,7 +4,7 @@ const path = require('path');
 	
 function onReady () {     
     var win;
-	win = new BrowserWindow({width: 1456, height: 1000})    
+	win = new BrowserWindow({width: 1456, height: 1000, autoHideMenuBar: true})    
 	win.loadURL(url.format({      
 		pathname: path.join(
 			__dirname,
