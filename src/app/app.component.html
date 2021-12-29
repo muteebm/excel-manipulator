@@ -16,7 +16,7 @@
           Imported datasets
         </h3>
         <ul>
-          <li *ngFor="let data of dataSets; let i = index" [class.selected]="selectedIndex === i" (click)="selectedIndex = i;">Dataset {{i}}</li>
+          <li *ngFor="let data of dataSets; let i = index" [class.selected]="selectedIndex === i" (click)="selectedIndex = i;">{{data.dataSetName}}</li>
         </ul>
         <input type="file" accept=".xlsx" (change)="uploadListener($event)"/>
       </div>
@@ -25,13 +25,13 @@
         <h3>
           Load Main File
         </h3>
-        <input type="file" accept=".xlsx"/>
+        <input type="file" accept=".xlsx" (change)="mainFileListener($event)" />
       </div>
       
     </div>
     <div class="center">
       <h3>Data view</h3>
-      <table class="table table-striped">
+      <table *ngIf="dataSets[selectedIndex]" class="table table-striped bordered">
         <thead>
         </thead>
         <tbody>
@@ -40,21 +40,36 @@
         </tr>
         </tbody>
       </table>
+      <span *ngIf="!dataSets[selectedIndex]" class="noSelectClass">
+        Please select a dataset.
+      </span>
     </div>
     <div class="rightBar">
-      <h3>Index Columns</h3>
+      <div class="indexCols">
+        <h3>Index Columns</h3>
+        <ngconf-taginput *ngIf="dataSets[selectedIndex]" (onTag)="tagInput($event)" [customStyles]="customStyles" [typeaheads]="typeaheads" [allowed]="allowedTags" (onFail)="onFail($event)">
+        </ngconf-taginput>
+        <span *ngIf="!dataSets[selectedIndex]" class="noSelectClass">
+          Please select a dataset.
+        </span>
+      </div>
+      
+
       <div class="indexRows">
           <h3>Index Rows</h3>
-          <div class="rangeInput">
+          <div *ngIf="dataSets[selectedIndex]" class="rangeInput">
             <input [(ngModel)]="dataSets[selectedIndex].startImportRow" type="number"/>
             <p><b> -- </b></p>
             <input [(ngModel)]="dataSets[selectedIndex].endImportRow" type="number"/>
           </div>
+          <span *ngIf="!dataSets[selectedIndex]" class="noSelectClass">
+            Please select a dataset.
+          </span>
       </div>
-      <div class="selectSheet">
+      <div *ngIf="dataSets[selectedIndex]" class="selectSheet">
         <h3>Select Sheet</h3>
         <select [(ngModel)]="dataSets[selectedIndex].selectedSheet">
-          <option *ngFor="let opt of sheetOptions" [value]="opt">{{opt}}</option>
+          <option *ngFor="let opt of dataSets[selectedIndex].sheetOptions" [value]="opt">{{opt}}</option>
         </select>
       </div>
   
@@ -74,7 +89,7 @@
   </div>
   <div class="modal-body">
     <!-- <form> -->
-      <div class="form-group">
+      <div *ngIf="dataSets[selectedIndex]" class="form-group">
         <div>
           <label for="dateOfBirth">File Export Name </label>
           <input [disabled]="true" [value]="exportWorkbookName" id="dateOfBirth" class="form-control" type="text">
@@ -83,16 +98,19 @@
           <label for="dateOfBirth">Sheet Export Location </label>
           <input id="dateOfBirth" [(ngModel)]="dataSets[selectedIndex].sheetExportLocation" class="form-control" type="text">
         </div>
-        <div>
+        <!-- <div>
           <label for="dateOfBirth">Column Start </label>
           <input id="dateOfBirth" [(ngModel)]="dataSets[selectedIndex].colStart"  class="form-control" type="text">
         </div>
         <div>
           <label for="dateOfBirth">Row Start </label>
           <input id="dateOfBirth" [(ngModel)]="dataSets[selectedIndex].rowStart"  class="form-control" type="number">
-        </div>
+        </div> -->
       </div>
-      <br>
+      <span *ngIf="!dataSets[selectedIndex]" class="noSelectClass">
+        Please select a dataset.
+      </span>
+      <!-- <br>
       <div>
         <div class="colsList">
           <label>Add/Edit Columns</label>
@@ -104,11 +122,11 @@
           <li>Col2</li>
         </ul>
         <span>+</span>
-      </div>
+      </div> -->
     <!-- </form> -->
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Add</button>
+    <button type="button" class="btn btn-outline-dark" (click)="trimColAndRows(dataSets[selectedIndex].excelJsWorkbook, dataSets[selectedIndex].selectedSheet, selectedIndex)">Add to Sheet</button>
   </div>
 </ng-template>
 
@@ -119,7 +137,7 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div *ngIf="dataSets[selectedIndex]" class="modal-body">
     <form>
       <label>File export location</label>
       <p>{{exportWorkbookName}}</p>
@@ -163,6 +181,9 @@
       </table>
     </form>
   </div>
+  <span *ngIf="!dataSets[selectedIndex]" class="noSelectClass">
+    Please select a dataset.
+  </span>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Export Dataset</button>
   </div>

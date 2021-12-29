@@ -72,6 +72,9 @@
         display: flex;
         gap: 20px;
         justify-content: space-evenly;
+        .indexCols {
+            margin-right: 10px;
+        }
         .indexRows {
             .rangeInput {
                 display: flex;
@@ -116,6 +119,20 @@
     gap: 20px;
     justify-content: center;
     align-items: center;
+}
+
+input[type=file] {
+    margin-left: 30px;
+}
+
+.noSelectClass {
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 
