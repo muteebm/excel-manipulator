@@ -1,5 +1,6 @@
 <div class="doc">
   <div class="header">
+    <h3>Data view</h3>
     <button [disabled]="!dataSets.length" (click)="open(overviewContent)" class="btn-primary">
       Overview Details
     </button>
@@ -30,13 +31,13 @@
       
     </div>
     <div class="center">
-      <h3>Data view</h3>
-      <table *ngIf="dataSets[selectedIndex]" class="table table-striped bordered">
+      
+      <table *ngIf="dataSets[selectedIndex]" class="table">
         <thead>
         </thead>
         <tbody>
         <tr *ngFor="let data of dataSets[selectedIndex].jsonSheet">
-          <th scope="row">{{data}}</th>
+          <th scope="row" *ngFor="let val of data">{{val}}</th>
         </tr>
         </tbody>
       </table>

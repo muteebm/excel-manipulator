@@ -10,6 +10,9 @@
     justify-content: right;
     margin-top: 10px;
     margin-right: 10px;
+    h3 {
+        margin-right: 30%;
+    }
 }
 .main {
     flex: 80%;
@@ -71,7 +74,24 @@
     }
     .center {
         flex: 60%;
+        max-height: 90vh;
+        overflow: auto;
         text-align: center;
+        background: white;
+        table {
+        max-height: 90vh;
+        overflow: auto;
+        }
+        table tr th {
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+            color: black
+          }
+          
+          table tr th:last-of-type {
+            border-right: none;
+            
+          }
     }
     .rightBar {
         flex: 20%;
