@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
   sheetOptions = [];
   sheet: unknown[];
   sheetKeys: string[];
-  exportWorkbookName = 'Testing';
+  exportWorkbookName = 'workbook';
   selectedIndex: number;
   workbook: any;
   columns = [];
@@ -45,6 +45,7 @@ export class AppComponent implements OnInit {
   }
 
   tagInput(tags: any) {
+    this.dataSets[this.selectedIndex].colHeaders = {};
     this.dataSets[this.selectedIndex].importCols = tags;
     tags.forEach((tag: any) => {
       this.dataSets[this.selectedIndex].colHeaders[tag] = 'Default';
@@ -194,10 +195,31 @@ export class AppComponent implements OnInit {
   }
 
   exportWorkbook(): any {
-    console.log(this.dataSets)
+
     this.dataSets.forEach((val: any, index: any ) => {
       this.addWorksheettoWorkbook(val.jsonSheet, index)
     })
      XLSX.writeFile(this.workbook, `${this.exportWorkbookName}.xlsx`)
+     this.modalService.dismissAll();
+
+     this.dataSets.forEach((val: any, index: any) => {
+      this.removeWorksheetFromWorkbook(index);
+    });
   }
+
+  removeSheetHeaders(index: any) {
+    let sheet = this.dataSets[index].jsonSheet
+    if(this.dataSets[index].isExportWithHeaders){
+      sheet =this.dataSets[index].jsonSheet.slice(1);
+    }
+  
+    return sheet;
+  }
+
+  removeWorksheetFromWorkbook(index) {
+    this.dataSets[index].jsonSheet = this.removeSheetHeaders(index);
+    this.workbook = XLSX.utils.book_new();
+  }
+
 }
+

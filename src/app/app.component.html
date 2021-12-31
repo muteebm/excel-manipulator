@@ -48,7 +48,8 @@
     <div class="rightBar">
       <div class="indexCols">
         <h3>Index Columns</h3>
-        <ngconf-taginput *ngIf="dataSets[selectedIndex]" (onTag)="tagInput($event)" [customStyles]="customStyles" [typeaheads]="typeaheads" [allowed]="allowedTags" (onFail)="onFail($event)">
+        <ngconf-taginput *ngIf="dataSets[selectedIndex]" [tags]="this.dataSets[this.selectedIndex].importCols" (onTag)="tagInput($event)" [customStyles]="customStyles" [typeaheads]="typeaheads" [allowed]="allowedTags" (onFail)="onFail($event)">
+        
         </ngconf-taginput>
         <span *ngIf="!dataSets[selectedIndex]" class="noSelectClass">
           Please select a dataset.
@@ -196,6 +197,6 @@
     Please select a dataset.
   </span>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Export Dataset</button>
+    <button type="button" class="btn btn-outline-dark" (click)="exportWorkbook()">Export Dataset</button>
   </div>
 </ng-template>
